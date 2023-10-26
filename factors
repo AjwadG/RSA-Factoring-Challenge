@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+while IFS= read -r val;
+do
+    fact=($(factor $val))
+    echo "$val=$(bc <<< "$val/${fact[1]}")*${fact[1]}"
+done < $1

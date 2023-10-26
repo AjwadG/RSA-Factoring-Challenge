@@ -1,0 +1,30 @@
+#!/usr/bin/bash
+
+is_prime()
+{
+	echo $#
+}
+
+while IFS= read -r val
+do
+	res=($(factor $val))
+	if [ ${#res[@]} -eq 3 ]
+	then
+		echo "$val=$(bc <<< "$val/${res[1]}")*${res[1]}"
+	else
+		end=$(echo "sqrt($val)" | bc)
+		for (( i=3 ; i<=$end ; i+=2 ));
+		do
+			if [ $(($val % $i)) -eq 0 ] && [ $(is_prime $(factor $i)) -eq 2 ]
+			then
+				div=$(echo "$val/$i" | bc)
+				if [[ $(is_prime $(factor $div)) -eq 2 ]]
+				then
+					echo "$val=$i*$div"
+					exit
+				fi
+			fi
+		done
+	fi
+	break
+done < "$1"
